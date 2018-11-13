@@ -51,9 +51,9 @@ g +coord_flip()
 g <- ggplot(train, aes(x = log_revenue, y =totals_pageviews , color = trafficSource_medium)) + geom_point() +coord_flip()
 g+ facet_grid(trafficSource_medium~.)
 
-######Data cleaning for missing values --> replacing with zero#####
-#Apply log transform to revenue response variable
-#Seperate date into coponents --> month, year, etc
+######Data cleaning for missing values --> replacing with zero for various features such as below#####
+#We also applied the log transformation to revenue response variable
+#We also seperated date into coponents --> month, year, etc
 ###################################################################
 
 train$log_revenue[is.na(train$log_revenue)] <- 0
@@ -241,10 +241,28 @@ cv.sample <- mysample[cv.ind,]
 cv.test.sample <- mysample[-cv.ind,]
 
 #####build a spline model######
-#Earth package runs spline-based regression on specified features 
-#to determine ideal number of knots and location of each knot for every feature in regression.
-#Then run spline model and cross validate for best spline model on test set.
+#Below for reference was our spline code for the old data set.
+#We use CV to calculate number of knots and knot location
+#for each regressor with 'bs' funcion. We later found the 'earth' package which 
+#optimizes these parameters, so we use this package for the spline-based model 
+#on the new data set.
+#Old data:                           
+#Fit splines using important features
+#vals <- c(5,6,19,36,37,40)
+#cols <- colnames(train)[vals]
+#vals.mse <- c()
+#for(i in 1:20){
+#  nlm_spline <- lm(log.transactionRevenue~bs(Month,knots=i)+bs(visitStartTime,knots=i)+bs(Dayofyear,knots=i)+bs(Week,knots=i)+bs(totals.hits,knots=i),data=train.cv)
+#  nlm_spline_pred <- predict(nlm_spline, newdata = valid.cv)
+#  vals.mse[i] <- mean((validation[,'log.transactionRevenue']-nlm_spline_pred)^2)
+#}
+#MSE and knots plot suggests 10 is ideal number of knots for each regressor. 
+# Fitting to the full training set and making predictions
+#nlm_spline <- lm(log.transactionRevenue~bs(Month,knots=10)+bs(visitStartTime,knots=10)+bs(Dayofyear,knots=10)+bs(Week,knots=10)+bs(totals.hits,knots=10),data=train)
+#nlm_spline_pred <- predict(nlm_spline,newdata=test)
 ################################
+
+#Spline model on new data with 'earth' package:
 earth_default <- earth(log_revenue~., data=cv.sample)
 cv.predi <- predict(earth_default,cv.test.sample)
 sqrt(sum((cv.predi - cv.test.sample$log_revenue)^2)/nrow(cv.test.sample))
