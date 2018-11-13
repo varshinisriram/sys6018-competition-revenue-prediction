@@ -1,0 +1,36 @@
+Who might care about this problem and why?
+
+The goal of this project was to predict revenue per customer at the GStore. 
+Google and other businesses with similar E-stores care significantly about this problem 
+because a better understanding of customer spending patterns can help marketing and other 
+strategic outreach teams optimize investments in promotional strategies as well as budget management. 
+This may result in profitable changes towards business operation as well as a platform for 
+understanding the Gstore customer base and specifically the factors that aid in predicting 
+which users are more likely to make significant purchases at the Gstore than others. 
+The end goal hinges on increasing profitability of the Gstore and efficiency of subgroups within Google marketing.
+
+
+Why might it be a challenging problem to address?
+
+The most notable challenge comes with addressing the 80/20 rule and class imbalance, 
+given that the majority of revenue is produced by a very small percentage of customers. 
+Additionally, from a data science perspective a major obstacle in this project has been 
+handling the size of the data, with the training set being 25GB and the test set being 7GB. 
+For example, when running the random forest algorithm on our local machine, we were not able 
+to build it with more than approximately 50 trees before our machine crashed. Additionally, parsing 
+the file in JSON format was a new problem for our team to tackle.
+
+What other problems resemble this problem?
+Identifying rare but significant healthcare events, for example, predicting the risk of patient deterioration. 
+
+What might account for the differing performance levels of the mandatory models?
+
+The biggest contributor to the differing performance of the models is due to the functional 
+form assumed of the data by the models and the flexibility that they allow. Specifically, one 
+could reasonably expect that these data exhibit a highly nonlinear functional form, and thus 
+we would expect that the OLS model would not perform as well as the spline-based regression or 
+the random forest which allow for greater flexibility. One additional factor that may impact the 
+model’s performance is the class imbalance. For example, with random forest the model continuously 
+tries to improve the accuracy of the predictions, however if 98% of the training data for consumer 
+revenue is $0, then the model will be pulled towards predicting $0 for most customers even though 
+a model like this is useless in practicality.
