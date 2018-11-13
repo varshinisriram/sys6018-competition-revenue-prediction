@@ -9,7 +9,7 @@ In this competition, you’re challenged to analyze a Google Merchandise Store (
 
 # Team Name: C4-6
 
-# Team Memeber
+# Team Memeber:
 Andrew Dahbura， Runhao Zhao, Varshini Sriram
 
 # Contributions:
@@ -27,7 +27,7 @@ Andrew Dahbura:
 - Summary
 - R Comments
 
-Varshini Sriram
+Varshini Sriram:
 - Data Visualization
 - Feature Selection
 - OLS Model
