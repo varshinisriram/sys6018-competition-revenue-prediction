@@ -1,3 +1,4 @@
+#Load libraries
 library("tidyverse")
 library("caret")
 library("naniar")
@@ -12,7 +13,7 @@ test <- read.csv("./Desktop/DATA MINING/comp3/all/test_v2_flat.csv", colClasses=
 #split training data into 0.7 training data set and 0.3 test set
 trainIndex = createDataPartition(train.total$fullVisitorId, p=0.7, list=FALSE,times=1)
 
-#creat training data set and test data set
+#create training data set and test data set
 train <- train.total[trainIndex,]
 test.set <-train.total[-trainIndex,]
 sample <- read.csv("./Desktop/DATA MINING/comp3/all/sample_submission_v2.csv",colClasses=c(fullVisitorId="character"))
@@ -24,12 +25,15 @@ train$log_revenue <- log(train$totals_transactionRevenue)
 num_na <- data.frame("percent"=apply(is.na(train), 2, sum))
 num_na$percent <- num_na$percent/nrow(train)
 num_na
-#data visulization
+
+#EDA and Data Visulization
 glimpse(train)
 gg_miss_var(train)
+
 #log transaction distribution
 g <- ggplot(train, aes(x = log_revenue)) + geom_histogram(fill="green", color = "black")
 g
+
 #distribution(exclude 0)
 g <- ggplot(train[train$log_revenue !=0,], aes(x = log_revenue)) + geom_histogram(fill="green", color = "black", bins =30)
 g
@@ -49,13 +53,15 @@ g+ facet_grid(trafficSource_medium~.)
 
 train$log_revenue[is.na(train$log_revenue)] <- 0
 train$date<- ymd(train$date)
+
 #daily log revenue vs date
 d2 <- train %>% group_by(date) %>% summarise(log_Revenue = sum(log_revenue)) %>%
   ggplot(aes(x=date, y=log_Revenue)) + geom_line(col='blue') + geom_smooth(col='red') + scale_x_date(date_breaks = "1 month", date_labels = "%b %d")
 d2
 
 train$month <- month(train$date)
-#month verse log_revenue
+
+#month versus log_revenue
 d3 <- train %>% group_by(month) %>% summarise(log_Revenue = sum(log_revenue)) %>%
   ggplot(aes(x=month, y=log_Revenue)) + geom_line(col='blue') + geom_smooth(col='red') + xlim(1, 12)
 d3
@@ -63,8 +69,10 @@ d1 <- train %>% group_by(date) %>% summarise(dailySessions = n()) %>%
   ggplot(aes(x=date, y=dailySessions)) + geom_line(col='blue') + geom_smooth(col='red') +
   labs(x="", y="Sessions per Day") + scale_x_date(date_breaks = "1 month", date_labels = "%b %d")
 d1
+
 #convert data into week and day
 train$weekday <- wday(train$date, label=TRUE)
+
 #test$weekday <- wday(test$date, label=TRUE)
 str(train$weekday)
 
@@ -76,11 +84,10 @@ plotRevenue <- function(dataframe, factorVariable, topN=10) {
     labs(x="", y="Log_Revenues (USD)")+
     theme(legend.position="none")
 }
+
 #weekday vs  total revenue
 w2 <- plotRevenue(train, weekday)
 w2
-
-
 
 #channelGrouping vs log_revenue
 sessionOrder <- train %>% count(channelGrouping) %>% top_n(10, wt=n) %>% arrange(desc(n))
@@ -97,7 +104,7 @@ uni.df
 cols <- c("channelGrouping","totals_hits",'trafficSource_medium','device_deviceCategory','geoNetwork_continent','geoNetwork_subContinent','device_isMobile','totals_pageviews',"month",'log_revenue')
 
 #=================
-#10 fold cross validation
+#Random Forest Model (10 fold cross validation)
 #=================
 #randomly select 200000 records for cross validation
 set.seed(33)
@@ -121,7 +128,7 @@ print(rf_default)
 varImp(rf_default)
 
 #=================
-#try different features based on the randomforest results
+#Try different features based on the randomforest results
 #=================
 set.seed(33)
 #select and ajust features 
@@ -212,10 +219,7 @@ write.csv(fina_df,"./Desktop/DATA MINING/comp3/test_submisson3.csv", row.names =
 
 
 #===================================
-#spline model
-#===================================
-#==============================
-#cross validation
+#Spline-based regression model (with cross validation)
 #==================================
 
 set.seed(33)
@@ -265,7 +269,7 @@ sqrt(sum((pred.df - true.y)^2)/nrow(test.set))
 #[1] 1.652634
 
 #===================================
-#use different features in spline models
+#Changing feature set for Spline-based regression model
 #======================================
 cols <- c("channelGrouping","totals_hits",'trafficSource_medium','device_deviceCategory','geoNetwork_continent','geoNetwork_subContinent','totals_pageviews','log_revenue')
 #==============================
@@ -321,7 +325,7 @@ sqrt(sum((pred.df - true.y)^2)/nrow(test.set))
 #[1] 1.652634
 
 #======================
-#predict on the real test set
+#Final predictions on test set
 #======================
 cols2 <- c("channelGrouping","totals_hits",'trafficSource_medium','device_deviceCategory','geoNetwork_continent','geoNetwork_subContinent','device_isMobile','totals_pageviews',"month")
 test$date<- ymd(test$date)
