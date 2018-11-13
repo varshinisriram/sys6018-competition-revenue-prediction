@@ -1,6 +1,7 @@
 # sys6018-competition-revenue-prediction
 The 80/20 rule has proven true for many businesses–only a small percentage of customers produce most of the revenue. As such, marketing teams are challenged to make appropriate investments in promotional strategies.
 <img height=200px width = 400px src="https://storage.googleapis.com/kaggle-media/competitions/RStudio/google_store.jpg">
+
 GStore
 
 RStudio, the developer of free and open tools for R and enterprise-ready products for teams to scale and share work, has partnered with Google Cloud and Kaggle to demonstrate the business impact that thorough data analysis can have.
@@ -14,8 +15,8 @@ Andrew Dahbura， Runhao Zhao, Varshini Sriram
 
 # Contributions:
 Runhao Zhao: 
-- Data Visualization
 - Data Cleanup
+- Data Visualization
 - Feature Selection
 - Spline Model
 - RandomForest Model
@@ -28,8 +29,9 @@ Andrew Dahbura:
 - R Comments
 
 Varshini Sriram:
+- Data Cleanup
 - Data Visualization
 - Feature Selection
 - OLS Model
-- Data Cleanup
+
 
