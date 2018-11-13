@@ -11,8 +11,8 @@ In this competition, you’re challenged to analyze a Google Merchandise Store (
 
 # Team Name: C4-6
 
-# Team Memeber:
-Andrew Dahbura， Runhao Zhao, Varshini Sriram
+# Team Memebers:
+Andrew Dahbura，Runhao Zhao, Varshini Sriram
 
 # Contributions:
 Runhao Zhao: 
