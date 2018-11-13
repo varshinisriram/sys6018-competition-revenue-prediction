@@ -20,8 +20,20 @@ For example, when running the random forest algorithm on our local machine, we w
 to build it with more than approximately 50 trees before our machine crashed. Additionally, parsing 
 the file in JSON format was a new problem for our team to tackle.
 
+
 What other problems resemble this problem?
-Identifying rare but significant healthcare events, for example, predicting the risk of patient deterioration. 
+
+This problem concerns predicting customer spending so that Google can use this information for optimizing
+marketing campaigns and other advertising efforts. Many business problems resemble this type of project, for 
+example when businesses need to determine what coupons to offer to different consumers based on the likelihood
+that customers from a particular group are likely to buy a product and how much they will likely spend. Additionally, 
+stock investors that might be looking to invest in a company based on expected annual returns may try to predict 
+customer spending as one factor in this estimation. Additionally, other businesses may want to answer the question of how 
+much product to make for a given time period and could use expected purchases as a way to predict how much apparel
+they will sell and thus need on hand over time. Lastly, other stores that may want to create their own e-commerce site
+and determine which features are relevant when determining sales revenue, so they could turn to this type of project
+for insight.
+
 
 What might account for the differing performance levels of the mandatory models?
 
