@@ -51,6 +51,11 @@ g +coord_flip()
 g <- ggplot(train, aes(x = log_revenue, y =totals_pageviews , color = trafficSource_medium)) + geom_point() +coord_flip()
 g+ facet_grid(trafficSource_medium~.)
 
+######Data cleaning for missing values --> replacing with zero#####
+#Apply log transform to revenue response variable
+#Seperate date into coponents --> month, year, etc
+###################################################################
+
 train$log_revenue[is.na(train$log_revenue)] <- 0
 train$date<- ymd(train$date)
 
@@ -235,10 +240,16 @@ cv.ind <- sample(1:nrow(mysample), 250000, replace=FALSE)
 cv.sample <- mysample[cv.ind,]
 cv.test.sample <- mysample[-cv.ind,]
 
-#build a spline model
+#####build a spline model######
+#Earth package runs spline-based regression on specified features 
+#to determine ideal number of knots and location of each knot for every feature in regression.
+#Then run spline model and cross validate for best spline model on test set.
+################################
 earth_default <- earth(log_revenue~., data=cv.sample)
 cv.predi <- predict(earth_default,cv.test.sample)
 sqrt(sum((cv.predi - cv.test.sample$log_revenue)^2)/nrow(cv.test.sample))
+
+#Test RMSE spline-based model 1
 #[1] 1.675687
 
 print(earth_default)
@@ -269,7 +280,8 @@ sqrt(sum((pred.df - true.y)^2)/nrow(test.set))
 #[1] 1.652634
 
 #===================================
-#Changing feature set for Spline-based regression model
+#Changing feature set for Spline-based regression model from all features 
+#to important features from previous random forest
 #======================================
 cols <- c("channelGrouping","totals_hits",'trafficSource_medium','device_deviceCategory','geoNetwork_continent','geoNetwork_subContinent','totals_pageviews','log_revenue')
 #==============================
@@ -322,7 +334,9 @@ pred.df <- data.frame(prediction = cv.pred)
 
 #calculate RMSE
 sqrt(sum((pred.df - true.y)^2)/nrow(test.set))
-#[1] 1.652634
+#Test RMSE of reduced feature set spline-based regression model
+#1.652634 <--slight improvement from previous model
+#Use reduced spline model for final predictions
 
 #======================
 #Final predictions on test set
